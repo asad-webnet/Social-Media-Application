@@ -13,6 +13,7 @@ const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
 
 router.get ('/:username', async (req, res) => {
   const {username} = req.params;
+  console.log (username);
 
   try {
     if (username.length < 1) return res.status (401).send ('Invalid');
@@ -22,7 +23,10 @@ router.get ('/:username', async (req, res) => {
 
     const user = await UserModel.find ({username: username.toLowerCase ()});
 
-    if (user) return res.status (401).send ('Username already taken');
+
+    if (user.length > 0) {
+      return res.status (401).send ('Username already taken');
+    }
 
     return res.status (200).send ('Available');
   } catch (error) {
@@ -43,6 +47,8 @@ router.post ('/', async (req, res) => {
     twitter,
     instagram,
   } = req.body.user;
+
+  console.log (req.body.user);
 
   if (!isEmail (email)) return res.status (401).send ('Invalid email');
 
@@ -82,7 +88,7 @@ router.post ('/', async (req, res) => {
 
     await new ProfileModel (profileFields).save ();
 
-    await new FollowerModel ({user: user._id, followers: [], following: []});
+    await new FollowerModel ({user: user._id, followers: [], following: []}).save();
 
     const payload = {userId: user._id};
     jwt.sign (
@@ -99,3 +105,5 @@ router.post ('/', async (req, res) => {
     return res.status (500).send ('Server error');
   }
 });
+
+module.exports = router;

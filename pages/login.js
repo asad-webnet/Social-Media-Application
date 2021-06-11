@@ -7,6 +7,7 @@ import {
   TextArea,
   Divider,
 } from 'semantic-ui-react';
+import {loginUser} from '../utils/authUser';
 import baseUrl from '../utils/baseUrl';
 import axios from 'axios';
 import {
@@ -20,6 +21,8 @@ function Login () {
     password: '',
   });
 
+  const {email,password} = user;
+
   const [showPassword, setShowPassword] = useState (false);
   const [errorMsg, setErrorMsg] = useState (null);
   const [formLoading, setFormLoading] = useState (false);
@@ -27,7 +30,7 @@ function Login () {
 
   useEffect (
     () => {
-      const isUser = Object.values ({name, email}).every (item =>
+      const isUser = Object.values ({email,password}).every (item =>
         Boolean (item)
       );
       isUser ? setSubmitDisabled (false) : setSubmitDisabled (true);
@@ -42,9 +45,11 @@ function Login () {
     setUser (prev => ({...prev, [name]: value}));
   };
 
-  const handleSubmit = e => e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault ();
 
-  const {email, password} = user;
+    await loginUser(user,setErrorMsg,setFormLoading)
+  };
 
   return (
     <React.Fragment>

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ProfileSchema = new Schema (
   {
-    user: {type: Schema.Types.ObjectId, ref: 'User'},
+    user: {type: Schema.Types.ObjectId, ref: "User"},
 
     bio: {type: String, required: true},
 
@@ -19,4 +19,4 @@ const ProfileSchema = new Schema (
   }
 );
 
-module.exports = mongoose.Schema ('Profile', ProfileSchema);
+module.exports = mongoose.model ('Profile', ProfileSchema);

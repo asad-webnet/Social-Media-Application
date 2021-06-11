@@ -1,4 +1,5 @@
 const app = require('express')()
+const bodyParser = require('body-parser')
 const server = require('http').Server(app)
 const next=require('next')
 const dev=process.env.NODE_ENV!=='production'
@@ -11,6 +12,9 @@ connectDb();
 
 nextApp.prepare().then(() => {
 
+    app.use(bodyParser.json());
+
+    
     app.use('/api/signup',require('./api/signup'))
     app.use('/api/auth',require('./api/auth'))
 
